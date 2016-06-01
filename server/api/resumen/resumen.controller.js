@@ -168,7 +168,7 @@ exports.byProyecto = function(req, res) {
 exports.vistaCliente = function(req, res) {
   Resumen.findById(req.params.id)
     .populate('creador')
-    .deepPopulate('actividades.equipo actividades.ubicacion actividades.creador proyecto.cliente')
+    .deepPopulate('actividades.equipo.tipo actividades.ubicacion actividades.creador proyecto.cliente')
     .exec()
     .then(responseWithResult(res))
     .catch(handleError(res));

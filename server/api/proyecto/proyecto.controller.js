@@ -81,7 +81,7 @@ exports.index = function(req, res) {
       .populate({ path: 'usuarios', select: 'name' })
       .populate({ path: 'ubicaciones', select: 'nombre' })
       .populate({ path: 'cliente', select: 'nombre' })
-      .populate({ path: 'equipos', select: 'nombre' })
+      .deepPopulate('equipos.tipo.trabajos')
       .exec()
       .then(responseWithResult(res))
       .catch(handleError(res));
@@ -108,7 +108,7 @@ exports.show = function(req, res) {
       .populate({ path: 'usuarios', select: 'name' })
       .populate({ path: 'ubicaciones', select: 'nombre' })
       .populate({ path: 'cliente', select: 'nombre correos' })
-      .populate({ path: 'equipos', select: 'nombre' })
+      .deepPopulate('equipos.tipo.trabajos')
       .exec()
       .then(handleEntityNotFound(res))
       .then(responseWithResult(res))
@@ -227,12 +227,6 @@ exports.update = function(req, res) {
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
-
-/*//metodo para desactivar un proyecto
-exports.desactivar = function(req, res) {}
-
-//metodo para activar un proyecto
-exports.activar = function(req, res) {}*/
 
 // Deletes a Proyecto from the DB
 exports.destroy = function(req, res) {

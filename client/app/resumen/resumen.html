@@ -47,12 +47,12 @@
     <li class="list-group-item">
       <h3>Detalle de trabajos realizados</h3>
       <ul class="list-group">
-        <li class="list-group-item list-group-item-danger" ng-click="model.ver_rojos = !model.ver_rojos">
+        <li class="list-group-item" ng-click="model.ver_rojos = !model.ver_rojos">
           <span class="label label-danger label-bandera-resumen">{{model.resumen.actividades && model.resumen.actividades.length > 0 && model.rojos && model.rojos.length > 0 ? (100 * model.rojos.length / model.resumen.actividades.length) : 0 | number: 0}}%</span>
-          <span>Trabajos que presentan dificultades</span>
-          <span class="glyphicon glyphicon-chevron-{{model.ver_rojos ? 'up' : 'down'}} pull-right icono-bandera-resumen"></span>
+          <span>Equipos que presentan dificultades</span>
+          <span class="glyphicon glyphicon-chevron-{{model.ver_rojos ? 'up' : 'down'}} pull-right icono-bandera-resumen icono-color-negro"></span>
         </li>
-        <li class="list-group-item list-group-item-danger" ng-show="model.ver_rojos" ng-repeat="actividad in model.rojos = (model.resumen.actividades | filter: { indicador: { es_rojo: true }})">
+        <li class="list-group-item" ng-show="model.ver_rojos" ng-repeat="actividad in model.rojos = (model.resumen.actividades | filter: { indicador: { es_rojo: true }})">
           <ul class="list-group">
             <li class="list-group-item">
               <div class="row">
@@ -61,7 +61,7 @@
                   <p><strong>Marca:</strong> {{actividad.equipo.marca}}</p>
                   <p><strong>Modelo:</strong> {{actividad.equipo.modelo}}</p>
                   <p>
-                    <strong>Tipo:</strong> {{actividad.equipo.tipo}} |
+                    <strong>Tipo:</strong> {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}} |
                     <strong>Capacidad:</strong> {{actividad.equipo.capacidad}} |
                     <strong>Serie:</strong> {{actividad.equipo.serie}} |
                     <strong>Antiguedad:</strong> {{actividad.equipo.antiguedad}}
@@ -166,15 +166,15 @@
             </li>
           </ul>
         </li>
-        <li class="list-group-item list-group-item-danger" ng-show="model.ver_rojos && (!model.rojos || (model.rojos && model.rojos.length === 0))">
+        <li class="list-group-item" ng-show="model.ver_rojos && (!model.rojos || (model.rojos && model.rojos.length === 0))">
           <span>Sin datos para mostrar.</span>
         </li>
-        <li class="list-group-item list-group-item-warning" ng-click="model.ver_amarillos = !model.ver_amarillos">
-          <span class="label label-warning label-bandera-resumen">{{model.resumen.actividades && model.resumen.actividades.length > 0 && model.amarillos && model.amarillos.length > 0 ? (100 * model.amarillos.length / model.resumen.actividades.length) : 0 | number: 0}}%</span>
-          <span>Trabajos con alertas preventivas</span>
+        <li class="list-group-item" ng-click="model.ver_amarillos = !model.ver_amarillos">
+          <span class="label label-warning label-bandera-resumen color-amarillo">{{model.resumen.actividades && model.resumen.actividades.length > 0 && model.amarillos && model.amarillos.length > 0 ? (100 * model.amarillos.length / model.resumen.actividades.length) : 0 | number: 0}}%</span>
+          <span>Equipos con alertas preventivas</span>
           <span class="glyphicon glyphicon-chevron-{{model.ver_amarillos ? 'up' : 'down'}} pull-right icono-bandera-resumen"></span>
         </li>
-        <li class="list-group-item list-group-item-warning" ng-show="model.ver_amarillos" ng-repeat="actividad in model.amarillos = (model.resumen.actividades | filter: { indicador: { es_amarillo: true }})">
+        <li class="list-group-item" ng-show="model.ver_amarillos" ng-repeat="actividad in model.amarillos = (model.resumen.actividades | filter: { indicador: { es_amarillo: true }})">
           <ul class="list-group">
             <li class="list-group-item">
               <div class="row">
@@ -183,7 +183,7 @@
                   <p><strong>Marca:</strong> {{actividad.equipo.marca}}</p>
                   <p><strong>Modelo:</strong> {{actividad.equipo.modelo}}</p>
                   <p>
-                    <strong>Tipo:</strong> {{actividad.equipo.tipo}} |
+                    <strong>Tipo:</strong> {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}} |
                     <strong>Capacidad:</strong> {{actividad.equipo.capacidad}} |
                     <strong>Serie:</strong> {{actividad.equipo.serie}} |
                     <strong>Antiguedad:</strong> {{actividad.equipo.antiguedad}}
@@ -288,15 +288,15 @@
             </li>
           </ul>
         </li>
-        <li class="list-group-item list-group-item-warning" ng-show="model.ver_amarillos && (!model.amarillos || (model.amarillos && model.amarillos.length === 0))">
+        <li class="list-group-item" ng-show="model.ver_amarillos && (!model.amarillos || (model.amarillos && model.amarillos.length === 0))">
           <span>Sin datos para mostrar.</span>
         </li>
-        <li class="list-group-item list-group-item-success" ng-click="model.ver_verdes = !model.ver_verdes">
+        <li class="list-group-item" ng-click="model.ver_verdes = !model.ver_verdes">
           <span class="label label-success label-bandera-resumen">{{model.resumen.actividades && model.resumen.actividades.length > 0 && model.verdes && model.verdes.length > 0 ? (100 * model.verdes.length / model.resumen.actividades.length) : 0 | number: 0}}%</span>
-          <span>Trabajos sin dificultades ni alertas</span>
+          <span>Equipos sin dificultades ni alertas</span>
           <span class="glyphicon glyphicon-chevron-{{model.ver_verdes ? 'up' : 'down'}} pull-right icono-bandera-resumen"></span>
         </li>
-        <li class="list-group-item list-group-item-success" ng-show="model.ver_verdes" ng-repeat="actividad in model.verdes = (model.resumen.actividades | filter: { indicador: { es_verde: true }})">
+        <li class="list-group-item" ng-show="model.ver_verdes" ng-repeat="actividad in model.verdes = (model.resumen.actividades | filter: { indicador: { es_verde: true }})">
           <ul class="list-group">
             <li class="list-group-item">
               <div class="row">
@@ -305,7 +305,7 @@
                   <p><strong>Marca:</strong> {{actividad.equipo.marca}}</p>
                   <p><strong>Modelo:</strong> {{actividad.equipo.modelo}}</p>
                   <p>
-                    <strong>Tipo:</strong> {{actividad.equipo.tipo}} |
+                    <strong>Tipo:</strong> {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}} |
                     <strong>Capacidad:</strong> {{actividad.equipo.capacidad}} |
                     <strong>Serie:</strong> {{actividad.equipo.serie}} |
                     <strong>Antiguedad:</strong> {{actividad.equipo.antiguedad}}
@@ -410,7 +410,7 @@
             </li>
           </ul>
         </li>
-        <li class="list-group-item list-group-item-success" ng-show="model.ver_verdes && (!model.verdes || (model.verdes && model.verdes.length === 0))">
+        <li class="list-group-item" ng-show="model.ver_verdes && (!model.verdes || (model.verdes && model.verdes.length === 0))">
           <span>Sin datos para mostrar.</span>
         </li>
       </ul>

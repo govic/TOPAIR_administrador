@@ -4,6 +4,7 @@ angular.module('PCMAdministradorApp').controller('EquiposCtrl', function($scope,
   //modelo vista
   $scope.model = {
     equipos: [],
+    tipos: [],
     nuevo: {
       nombre: '',
       serie: ''
@@ -20,6 +21,13 @@ angular.module('PCMAdministradorApp').controller('EquiposCtrl', function($scope,
     }, function(err) {
       console.error(err);
       messageCenterService.add('danger', '<strong>Ops!</strong><br /><span>Error al cargar equipos.</span>', { html: true, timeout: config.time_danger });
+    });
+
+    apiServices.tiposEquipos.getTipos(function(data){
+      $scope.model.tipos = data;
+    }, function(err) {
+      console.error(err);
+      messageCenterService.add('danger', '<strong>Ops!</strong><br /><span>Error al cargar tipos de equipos.</span>', { html: true, timeout: config.time_danger });
     });
   };
   $scope.cargar();

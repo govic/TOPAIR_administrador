@@ -53,6 +53,16 @@ angular.module('PCMAdministradorApp').service('apiServices', function($resource)
         isArray: true
       }
     }),
+    tiposEquipos: $resource('/api/tipoequipo/:id', {}, {
+      update: {
+        method: 'put'
+      },
+      getTipos: {
+        method: 'get',
+        url: '/api/tipoequipo/getTipos',
+        isArray: true
+      }
+    }),
     resumenes: $resource('/api/resumen/:id', {}, {
       byProyecto: {
         method: 'get',

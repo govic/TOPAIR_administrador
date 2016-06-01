@@ -83,9 +83,7 @@ exports.pendientes = function(req, res) {
   }
   Actividad.find(opciones)
     .sort('-fecha_creacion')
-    .populate('creador')
-    .populate('equipo')
-    .populate('ubicacion')
+    .deepPopulate('creador ubicacion equipo.tipo trabajos_realizados.trabajos')
     .execAsync()
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -96,9 +94,7 @@ exports.pendientes = function(req, res) {
 exports.index = function(req, res) {
   Actividad.find({ proyecto: req.params.id_proyecto })
     .sort('-fecha_creacion')
-    .populate('creador')
-    .populate('equipo')
-    .populate('ubicacion')
+    .deepPopulate('creador ubicacion equipo.tipo.trabajos trabajos_realizados.trabajos') //deep equipo.tipo (2lvl)
     .execAsync()
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -140,9 +136,7 @@ exports.create = function(req, res) {
     //pobla datos referenciales
     .then(function(entity) {
       return Actividad.findOne(entity)
-        .populate('creador')
-        .populate('equipo')
-        .populate('ubicacion')
+        .deepPopulate('creador ubicacion equipo.tipo.trabajos trabajos_realizados.trabajos')
         .exec();
     })
     .then(responseWithResult(res, 201))
@@ -182,9 +176,7 @@ exports.update = function(req, res) {
     //pobla datos referenciales
     .then(function(entity) {
       return Actividad.findById(req.params.id)
-        .populate('creador')
-        .populate('equipo')
-        .populate('ubicacion')
+        .deepPopulate('creador ubicacion equipo.tipo.trabajos trabajos_realizados.trabajos')
         .exec();
     })
     .then(responseWithResult(res))

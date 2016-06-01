@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($scope, $stateParams, apiServices, _, messageCenterService, config) {
-  
+
   //modelo de vista
   $scope.model = {
     proyecto: {},
@@ -9,9 +9,6 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
     motivo_enum: [],
     nuevo: {
       proyecto: $stateParams.id_proyecto,
-      texto_equipo_buscar: '',
-      equipos_buscar: [],
-      equipo_seleccionado: {}, //para grabar enviar solo equipo:id
       equipo: '',
       motivo_visita: '',
       parametros: {}, //ver modelo actividad
@@ -63,7 +60,7 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
           $scope.model.envio.cco = data.resumen.cco;
           $scope.model.envio.asunto = data.resumen.asunto;
           $scope.model.envio.cuerpo = data.resumen.cuerpo;
-          return apiServices.resumenes.byProyecto({id: $stateParams.id_proyecto}).$promise;
+          return apiServices.resumenes.byProyecto({ id: $stateParams.id_proyecto }).$promise;
         }
       })
       .then(function(data) {
@@ -82,7 +79,7 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
   //metodo para agregar actividad
   $scope.agregar_actividad = function() {
     //validaciones
-    if (!$scope.model.nuevo.equipo_seleccionado || ($scope.model.nuevo.equipo_seleccionado && !$scope.model.nuevo.equipo_seleccionado._id)) {
+    if (!$scope.model.nuevo.equipo || ($scope.model.nuevo.equipo && !$scope.model.nuevo.equipo._id)) {
       messageCenterService.add('warning', '<strong>Ops!</strong><br /><span>Debe seleccionar un equipo asociado.</span>', { html: true, timeout: config.time_warning });
       return;
     }
@@ -103,9 +100,17 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
       messageCenterService.add('warning', '<strong>Ops!</strong><br /><span>Debe agregar texto para etapa 3.</span>', { html: true, timeout: config.time_warning });
       return;
     }
+
+    //obtiene ids de trabajos realizados seleccionados
+    if ($scope.model.nuevo.equipo.tipo && $scope.model.nuevo.equipo.tipo.trabajos && $scope.model.nuevo.equipo.tipo.trabajos.length > 0) {
+      $scope.model.nuevo.trabajos_realizados.trabajos = _.map(_.filter($scope.model.nuevo.equipo.tipo.trabajos, function(x) {
+        return x.checked;
+      }), function(x) {
+        return x._id;
+      });
+    }
+
     var datos = _.clone($scope.model.nuevo);
-    delete datos.texto_equipo_buscar;
-    delete datos.equipo_seleccionado;
     datos.es_pendiente = false;
     apiServices.actividades.save(datos, function(data) {
       $scope.model.ver_agregar = false;
@@ -138,37 +143,6 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
     };
   };
 
-  //metodo para buscar equipo
-  $scope.buscar_equipo_agregar = function() {
-    if ($scope.model.nuevo.texto_equipo_buscar) {
-      apiServices.equipos.buscarByProyecto({ id_proyecto: $stateParams.id_proyecto, texto: $scope.model.nuevo.texto_equipo_buscar }, function(data) {
-        $scope.model.nuevo.equipos_buscar = data;
-      }, function(err) {
-        console.error(err);
-        $scope.model.nuevo.equipos_buscar = [];
-        messageCenterService.add('danger', '<strong>Ops!</strong><br /><span>Error al cargar datos iniciales.</span>', { html: true, timeout: config.time_danger });
-      });
-    }
-  };
-
-  //metodo para asociar equipo en actividad
-  $scope.utilizar_equipo_agregar = function(equipo) {
-    if (equipo) {
-      $scope.model.nuevo.equipo_seleccionado = equipo;
-      $scope.model.nuevo.equipo = equipo._id;
-      $scope.model.nuevo.texto_equipo_buscar = '';
-      $scope.model.nuevo.equipos_buscar = [];
-    }
-  };
-
-  //metodo para deasociar equipo de actividad
-  $scope.quitar_equipo_agregar = function() {
-    $scope.model.nuevo.equipo_seleccionado = {};
-    $scope.model.nuevo.equipo = '';
-    $scope.model.nuevo.texto_equipo_buscar = '';
-    $scope.model.nuevo.equipos_buscar = [];
-  };
-
   //metodo para activar / desactivar actividad
   $scope.desactivar = function(actividad) {
     apiServices.actividades.update({ id: actividad._id }, { es_activo: !actividad.es_activo }, function(data) {
@@ -198,6 +172,13 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
     $scope.cancelar_editar();
     actividad.ver_editar = true;
     actividad.editar = _.clone(actividad);
+    if (actividad.editar.equipo.tipo && actividad.editar.equipo.tipo.trabajos && actividad.editar.equipo.tipo.trabajos.length > 0) {
+      _.each(actividad.editar.equipo.tipo.trabajos, function(x) {
+        x.checked = _.some(actividad.trabajos_realizados.trabajos, function(a) {
+          return a._id === x._id;
+        });
+      });
+    }
   };
 
   //metodo para cancelar form editar actividades
@@ -232,9 +213,17 @@ angular.module('PCMAdministradorApp').controller('ActividadesCtrl', function($sc
       messageCenterService.add('warning', '<strong>Ops!</strong><br /><span>Debe agregar texto para etapa 3.</span>', { html: true, timeout: config.time_warning });
       return;
     }
+
+    //obtiene ids de trabajos realizados seleccionados
+    if (actividad.editar.equipo.tipo && actividad.editar.equipo.tipo.trabajos && actividad.editar.equipo.tipo.trabajos.length > 0) {
+      actividad.editar.trabajos_realizados.trabajos = _.map(_.filter(actividad.editar.equipo.tipo.trabajos, function(x) {
+        return x.checked;
+      }), function(x) {
+        return x._id;
+      });
+    }
+
     var datos = _.clone(actividad.editar);
-    delete datos.texto_equipo_buscar;
-    delete datos.equipo_seleccionado;
     datos.es_pendiente = false;
     apiServices.actividades.update({ id: datos._id }, datos, function(data) {
       $scope.cancelar_editar();

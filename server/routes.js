@@ -19,6 +19,8 @@ module.exports = function(app) {
     });
 
     // Insert routes below
+    app.use('/api/tipotrabajo', require('./api/tipotrabajo'));
+    app.use('/api/tipoequipo', require('./api/tipoequipo'));
     app.use('/api/parametro', require('./api/parametro'));
     app.use('/api/resumen', require('./api/resumen'));
     app.use('/api/equipo', require('./api/equipo'));

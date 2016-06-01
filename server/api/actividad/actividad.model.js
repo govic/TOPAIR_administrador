@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('bluebird').promisifyAll(require('mongoose'));
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var Schema = mongoose.Schema;
 
 var ActividadSchema = new Schema({
@@ -36,7 +37,8 @@ var ActividadSchema = new Schema({
   //observacion trabajos realizados
   trabajos_realizados: {
     texto: { type: String, default: '' },
-    fecha_ingreso: { type: Date, default: Date.now }
+    fecha_ingreso: { type: Date, default: Date.now },
+    trabajos: [{ type: Schema.Types.ObjectId, ref: 'TipoTrabajo' }]
   },
 
   //recomendaciones realizadas por tecnico
@@ -85,4 +87,5 @@ var ActividadSchema = new Schema({
   }
 });
 
+ActividadSchema.plugin(deepPopulate);
 module.exports = mongoose.model('Actividad', ActividadSchema);

@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('bluebird').promisifyAll(require('mongoose'));
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var Schema = mongoose.Schema;
 
 var ProyectoSchema = new Schema({
@@ -32,4 +33,5 @@ var ProyectoSchema = new Schema({
   }
 });
 
+ProyectoSchema.plugin(deepPopulate);
 module.exports = mongoose.model('Proyecto', ProyectoSchema);

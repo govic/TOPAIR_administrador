@@ -10,7 +10,7 @@
     <div class="col-md-12">
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="#" ui-sref="proyectos">Volver a proyectos</a>
+          <a href="#" ui-sref="proyectos">Volver a lista de contratos</a>
           <a href="#" ng-click="model.ver_agregar = !model.ver_agregar; model.ver_envio = false; model.ver_resumenes = false;"> | Nuevo trabajo</a>
           <a href="#" ng-click="model.ver_envio = !model.ver_envio; model.ver_agregar = false; model.ver_resumenes = false;"> | Nuevo resumen cliente</a>
           <a href="#" ng-click="model.ver_resumenes = !model.ver_resumenes; model.ver_agregar = false; model.ver_envio = false;"> | Historial de envíos</a>
@@ -20,22 +20,8 @@
           <li class="list-group-item" ng-show="model.ver_agregar">
             <div class="form-group">
               <label>Equipo asociado <small>Requerido</small></label>
-              <ul class="list-group" ng-show="model.nuevo.equipo_seleccionado._id">
-                <li class="list-group-item">
-                  {{model.nuevo.equipo_seleccionado.nombre}}
-                  <a href="#" ng-click="quitar_equipo_agregar()" title="Desasociar el equipo"><span class="glyphicon glyphicon-remove pull-right"></span></a>
-                </li>
-              </ul>
-              <div class="input-group" ng-hide="model.nuevo.equipo_seleccionado._id">
-                <input type="text" class="form-control" placeholder="Identificador del equipo" ng-model="model.nuevo.texto_equipo_buscar">
-                <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="buscar_equipo_agregar()">Buscar</button></span>
-              </div>
-              <ul class="list-group" ng-hide="model.nuevo.equipo_seleccionado._id">
-                <li class="list-group-item" ng-repeat="equipo in model.nuevo.equipos_buscar track by $index">
-                  {{equipo.nombre}}
-                  <a href="#" ng-click="utilizar_equipo_agregar(equipo)"><span class="pull-right btn btn-default btn-xs">Utilizar</span></a>
-                </li>
-              </ul>
+
+              <select class="form-control" ng-options="item as (item.nombre + ' , Serie: ' + item.serie) for item in model.proyecto.equipos track by item._id" ng-model="model.nuevo.equipo"></select>
             </div>
             <div class="form-group">
               <label>Ubicación <small>Requerido</small></label>
@@ -180,22 +166,37 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Etapa 1 - Estado inicial equipo <small>Requerido</small></label>
+                  <label>Estado inicial equipo <small>Requerido</small></label>
                   <textarea rows="5" required class="form-control" placeholder="Escriba un texto descriptivo para este campo" ng-model="model.nuevo.estado_inicial.texto"></textarea>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Etapa 2 - Trabajos realizados <small>Requerido</small></label>
+                  <label>Trabajos realizados <small>Requerido</small></label>
                   <textarea rows="5" required class="form-control" placeholder="Escriba un texto descriptivo para este campo" ng-model="model.nuevo.trabajos_realizados.texto"></textarea>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Etapa 3 - Recomendaciones <small>Requerido</small></label>
+                  <label>Recomendaciones <small>Requerido</small></label>
                   <textarea rows="5" required class="form-control" placeholder="Escriba un texto descriptivo para este campo" ng-model="model.nuevo.recomendaciones.texto"></textarea>
                 </div>
               </div>
+            </div>
+          </li>
+          <a href="#" class="list-group-item " ng-init="model.ver_lista_trabajos = false" ng-click="model.ver_lista_trabajos = !model.ver_lista_trabajos" ng-show="model.ver_agregar">
+            <span class="azul-destacado ng-binding">
+              Lista de trabajos asociados {{model.nuevo.equipo && model.nuevo.equipo.tipo && model.nuevo.equipo.tipo.trabajos && model.nuevo.equipo.tipo.trabajos.length > 0 ? '(' + model.nuevo.equipo.tipo.trabajos.length + ')' : ''}}
+            </span>
+          </a>
+          <li class="list-group-item" ng-show="model.ver_agregar && model.ver_lista_trabajos && model.nuevo.equipo && model.nuevo.equipo.tipo && model.nuevo.equipo.tipo.trabajos && model.nuevo.equipo.tipo.trabajos.length > 0">
+            <div class="form-group">
+              <label>Trabajo para equipo tipo: {{model.nuevo.equipo.tipo.nombre}} ({{model.nuevo.equipo.tipo.trabajos.length}})</label>
+              <ul class="list-group list-group-hover scroll-lista-trab-realizados">
+                <label ng-repeat="trabajo in model.nuevo.equipo.tipo.trabajos | orderBy: 'nombre'" class="list-group-item {{trabajo.checked ? 'list-group-item-info' : ''}}">
+                  <input type="checkbox" ng-model="trabajo.checked"> {{$index + 1}} - {{trabajo.nombre}}
+                </label>
+              </ul>
             </div>
           </li>
           <li class="list-group-item" ng-show="model.ver_agregar">
@@ -254,7 +255,7 @@
                     <p><strong>Marca:</strong> {{actividad.equipo.marca}}</p>
                     <p><strong>Modelo:</strong> {{actividad.equipo.modelo}}</p>
                     <p>
-                      <strong>Tipo:</strong> {{actividad.equipo.tipo}} |
+                      <strong>Tipo:</strong> {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}} |
                       <strong>Capacidad:</strong> {{actividad.equipo.capacidad}} |
                       <strong>Serie:</strong> {{actividad.equipo.serie}} |
                       <strong>Antiguedad:</strong> {{actividad.equipo.antiguedad}}
@@ -278,18 +279,19 @@
         </li>
         <li class="list-group-item" ng-show="model.ver_resumenes">
           <ul class="list-group">
-            <div ng-repeat="envio in model.envios">
+            <div ng-repeat="envio in model.envios | orderBy: '-fecha_creacion'">
               <li class="list-group-item">
                 <span ng-show="!envio.fecha_envio" class="label label-danger">Resumen no enviado</span>
-                <small ng-show="envio.creador"><strong>Creador:</strong> {{envio.creador ? envio.creador.name : 'Sin datos para mostrar'}} | </small>
                 <small ng-show="envio.fecha_envio"><strong>Fecha envío:</strong> {{envio.fecha_envio | date:'dd/MM/yyyy HH:mm'}} | </small>
                 <small ng-show="envio.fecha_ultimo_reenvio"><strong>Fecha último reenvío:</strong> {{envio.fecha_ultimo_reenvio | date:'dd/MM/yyyy HH:mm'}} {{envio.cantidad_envios && envio.cantidad_envios > 0 ? ('(' + envio.cantidad_envios + ' reintentos) ') : ' ' }}| </small>
                 <small ng-show="envio.fecha_creacion"><strong>Fecha ingreso:</strong> {{envio.fecha_creacion | date:'dd/MM/yyyy HH:mm'}} | </small>
-                <small ng-show="envio.fecha_modificacion"><strong>Fecha modificación:</strong> {{envio.fecha_modificacion | date:'dd/MM/yyyy HH:mm'}}</small>
+                <small ng-show="envio.fecha_modificacion"><strong>Fecha modificación:</strong> {{envio.fecha_modificacion | date:'dd/MM/yyyy HH:mm'}} | </small>
+                <small ng-show="envio.creador"><strong>Creador:</strong> {{envio.creador ? envio.creador.name : 'Sin datos para mostrar'}}</small>
+                <a href="#" class="pull-right" ng-click="envio.ver_detalle = !envio.ver_detalle">{{envio.ver_detalle ? 'Ocultar detalles' : 'Ver detalles'}}</a>
               </li>
-              <li class="list-group-item">
-                <strong>Asunto:</strong> {{envio.asunto ? envio.asunto : 'Sin datos para mostrar.'}} | 
-                <strong>Correos:</strong> {{envio.correos ? envio.correos.join(', ') : 'Sin datos para mostrar.'}} | 
+              <li class="list-group-item" ng-show="envio.ver_detalle">
+                <strong>Asunto:</strong> {{envio.asunto ? envio.asunto : 'Sin datos para mostrar.'}} |
+                <strong>Correos:</strong> {{envio.correos ? envio.correos.join(', ') : 'Sin datos para mostrar.'}} |
                 <strong>Copias ocultas:</strong> {{envio.cco ? envio.cco.join(', ') : 'Sin datos para mostrar.'}}
                 <br>
                 <strong>Cuerpo:</strong> <span class="string-multiline">{{envio.cuerpo ? envio.cuerpo : 'Sin datos para mostrar.'}}</span>
@@ -299,9 +301,10 @@
                 <strong>Cantidad de trabajos informados:</strong> {{envio.actividades ? envio.actividades.length : 'Sin datos para mostrar.'}}
                 <br>
               </li>
-              <li class="list-group-item">
+              <li class="list-group-item" ng-show="envio.ver_detalle">
                 <a href="#" ui-sref="resumen({id: envio._id})">Link resumen cliente</a>
               </li>
+              <br>
             </div>
           </ul>
         </li>
@@ -486,22 +489,37 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Etapa 1 - Estado inicial equipo <small>Requerido</small></label>
+                  <label>Estado inicial equipo <small>Requerido</small></label>
                   <textarea rows="5" required class="form-control" placeholder="Escriba un texto descriptivo para este campo" ng-model="actividad.editar.estado_inicial.texto"></textarea>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Etapa 2 - Trabajos realizados <small>Requerido</small></label>
+                  <label>Trabajos realizados <small>Requerido</small></label>
                   <textarea rows="5" required class="form-control" placeholder="Escriba un texto descriptivo para este campo" ng-model="actividad.editar.trabajos_realizados.texto"></textarea>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Etapa 3 - Recomendaciones <small>Requerido</small></label>
+                  <label>Recomendaciones <small>Requerido</small></label>
                   <textarea rows="5" required class="form-control" placeholder="Escriba un texto descriptivo para este campo" ng-model="actividad.editar.recomendaciones.texto"></textarea>
                 </div>
               </div>
+            </div>
+          </li>
+          <a href="#" class="list-group-item " ng-init="actividad.editar.ver_lista_trabajos = false" ng-click="actividad.editar.ver_lista_trabajos = !actividad.editar.ver_lista_trabajos">
+            <span class="azul-destacado ng-binding">
+              Lista de trabajos asociados
+            </span>
+          </a>
+          <li class="list-group-item" ng-show="actividad.editar.ver_lista_trabajos && actividad.editar.equipo && actividad.editar.equipo.tipo && actividad.editar.equipo.tipo.trabajos && actividad.editar.equipo.tipo.trabajos.length > 0">
+            <div class="form-group">
+              <label>Trabajo para equipo tipo: {{actividad.editar.equipo.tipo.nombre}}</label>
+              <ul class="list-group list-group-hover scroll-lista-trab-realizados">
+                <label ng-repeat="trabajo in actividad.editar.equipo.tipo.trabajos | orderBy: 'nombre'" class="list-group-item {{trabajo.checked ? 'list-group-item-info' : ''}}">
+                  <input type="checkbox" ng-model="trabajo.checked"> {{$index + 1}} - {{trabajo.nombre}}
+                </label>
+              </ul>
             </div>
           </li>
           <li class="list-group-item {{!actividad.es_activo ? 'list-group-item-danger' : ''}}">
@@ -523,7 +541,7 @@
               <p><strong>Marca:</strong> {{actividad.equipo.marca}}</p>
               <p><strong>Modelo:</strong> {{actividad.equipo.modelo}}</p>
               <p>
-                <strong>Tipo:</strong> {{actividad.equipo.tipo}} |
+                <strong>Tipo:</strong> {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}} |
                 <strong>Capacidad:</strong> {{actividad.equipo.capacidad}} |
                 <strong>Serie:</strong> {{actividad.equipo.serie}} |
                 <strong>Antiguedad:</strong> {{actividad.equipo.antiguedad}}
@@ -603,19 +621,20 @@
         <li class="list-group-item {{!actividad.es_activo ? 'list-group-item-danger' : ''}}" ng-hide="actividad.ver_editar || !actividad.ver_textos">
           <div class="row">
             <div class="col-md-4">
-              <p><strong>Etapa 1 - Estado inicial equipo</strong></p>
+              <p><strong>Estado inicial equipo</strong></p>
               <p class="string-multiline">{{actividad.estado_inicial.texto}}</p>
               <img delete-on-error-src class="img-responsive" src="/api/actividad/estado_inicial/imagen/{{actividad._id}}">
               <p><small>Fecha ingreso: {{actividad.estado_inicial.fecha_ingreso | date:'dd/MM/yyyy HH:mm'}}</small></p>
             </div>
             <div class="col-md-4">
-              <p><strong>Etapa 2 - Trabajos realizados</strong></p>
+              <p><strong>Trabajos realizados</strong></p>
               <p class="string-multiline">{{actividad.trabajos_realizados.texto}}</p>
+              <p ng-show="actividad.trabajos_realizados.trabajos && actividad.trabajos_realizados.trabajos.length > 0"><small><strong><!-- <span class="glyphicon glyphicon-wrench"></span>  -->Se realizaron {{actividad.trabajos_realizados.trabajos.length}} trabajos para equipo tipo {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}}:</strong> <span class="underline-hover" ng-repeat="trabajo in actividad.trabajos_realizados.trabajos | orderBy: 'nombre'"><strong>({{$index + 1}})</strong> {{trabajo.nombre + ($last ? '.':', ')}}</span></span></small></p>
               <img delete-on-error-src class="img-responsive" src="/api/actividad/trabajos_realizados/imagen/{{actividad._id}}">
               <p><small>Fecha ingreso: {{actividad.trabajos_realizados.fecha_ingreso | date:'dd/MM/yyyy HH:mm'}}</small></p>
             </div>
             <div class="col-md-4">
-              <p><strong>Etapa 3 - Recomendaciones</strong></p>
+              <p><strong>Recomendaciones</strong></p>
               <p class="string-multiline">{{actividad.recomendaciones.texto}}</p>
               <p><small>Fecha ingreso: {{actividad.recomendaciones.fecha_ingreso | date:'dd/MM/yyyy HH:mm'}}</small></p>
             </div>

@@ -64,6 +64,7 @@ function removeEntity(res) {
 exports.index = function(req, res) {
   Equipo.find()
     .sort('-es_activo nombre')
+    .populate('tipo')
     .exec()
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -73,6 +74,7 @@ exports.index = function(req, res) {
 exports.activos = function(req, res) {
   Equipo.find({ es_activo: true })
     .sort('nombre')
+    .populate('tipo')
     .exec()
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -80,7 +82,9 @@ exports.activos = function(req, res) {
 
 // Gets a single Equipo from the DB
 exports.show = function(req, res) {
-  Equipo.findByIdAsync(req.params.id)
+  Equipo.findById(req.params.id)
+    .populate('tipo')
+    .exec()
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -89,6 +93,11 @@ exports.show = function(req, res) {
 // Creates a new Equipo in the DB
 exports.create = function(req, res) {
   Equipo.createAsync(req.body)
+    .then(function(entity) {
+      return Equipo.findOne(entity)
+        .populate('tipo')
+        .exec();
+    })
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -101,6 +110,11 @@ exports.update = function(req, res) {
   Equipo.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
+    .then(function(entity) {
+      return Equipo.findOne(entity)
+        .populate('tipo')
+        .exec();
+    })
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
@@ -128,6 +142,7 @@ exports.proyecto_buscar = function(req, res) {
               $options: 'i'
             }
           })
+          .deepPopulate('tipo tipo.trabajos')
           .sort('nombre')
           .exec();
       }

@@ -19,3 +19,8 @@
   color: grey;
   margin-right: -2px;
 }
+
+.scroll-lista-trab-realizados {
+  overflow-x: hidden;
+  height: 241px;
+}

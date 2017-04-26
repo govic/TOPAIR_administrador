@@ -92,6 +92,8 @@ exports.create = function(req, res) {
     })
     //correo cliente
     .then(function(entity) {
+      // topair: smtps://servicios@topair.cl:Ser123++@just27.justhost.com
+      // frazoger: smtps://servicio-pcm@frazoger.cl:0u)r5f}p;!m+@premium10543.hosting.cl
       var transporter = require('bluebird').promisifyAll(nodemailer.createTransport(parametros.correo.smtps));
       return transporter.sendMailAsync({
         from: parametros.correo.from,
@@ -173,3 +175,13 @@ exports.vistaCliente = function(req, res) {
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
+
+//metodo get sin autorizacion usuario para hacer pruebas
+exports.prueba = function(req, res) {
+  console.log('----------------------------------------');
+  console.log('prueba ... INICIO');
+  console.log('----------------------------------------');
+  console.dir(req.body);
+  console.log('----------------------------------------');
+  res.status(200).json({mensaje: 'OK'});
+}

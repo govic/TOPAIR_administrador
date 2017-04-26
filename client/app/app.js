@@ -112,6 +112,8 @@ angular.module('PCMAdministradorApp', [
   time_warning: 5000,
   time_success: 3000,
   //configuracion de textos fijos
+
+  //texto topair
   glosa_empresa: 'Topair',
   url_empresa: 'http://www.topair.cl/',
   correo_empresa: 'contacto@topair.cl',
@@ -119,4 +121,13 @@ angular.module('PCMAdministradorApp', [
   telefono_empresa: '+562-2624 3371',
   glosa_aplicacion: 'PCM v1.0.0',
   url_aplicacion: '#'
+
+  //texto frazoger
+  // glosa_empresa: 'Frazoger',
+  // url_empresa: 'http://www.frazoger.cl/',
+  // correo_empresa: 'contacto@topair.cl',
+  // direccion_empresa: 'Av. Presidente Frei Montalva 6001,  edificio  63. Complejo Industrial El Cortijo. Santiago.',
+  // telefono_empresa: '+56 2 2623 7339',
+  // glosa_aplicacion: 'PCM v1.0.2',
+  // url_aplicacion: '#'
 });

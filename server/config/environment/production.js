@@ -19,6 +19,6 @@ module.exports = {
       process.env.MONGOHQ_URL ||
       process.env.OPENSHIFT_MONGODB_DB_URL +
       process.env.OPENSHIFT_APP_NAME ||
-      'mongodb://pcm:123456a@jello.modulusmongo.net:27017/u2ronuVa'
+      'mongodb://topairadministrador-2851:Sc2*6J)d$3Ht}*5Fd$3Zt}Fd{9)@db-topairadministrador-2851.nodechef.com:5403/topairadministrador'
   }
 };

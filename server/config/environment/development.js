@@ -6,7 +6,7 @@ module.exports = {
   // MongoDB connection options
   mongo: {
     //uri: 'mongodb://localhost/pcmadministrador-dev'
-    uri: 'mongodb://pcm:123456a@jello.modulusmongo.net:27017/u2ronuVa'
+    uri: 'mongodb://topairadministrador-2851:Sc2*6J)d$3Ht}*5Fd$3Zt}Fd{9)@db-topairadministrador-2851.nodechef.com:5403/topairadministrador'
   },
   sequelize: {
     uri: 'sqlite://',

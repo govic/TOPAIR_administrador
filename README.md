@@ -1,3 +1,19 @@
+PCM Administrador y API
+
+Administrador de equipos y actividades Topair.
+
+Antes de hacer deploy en Nodechef:
+1. Verificar Gruntfile: config y karma debe estar comentados, y env.json debe copiarse junto a package.json
+2. Compilar código con 'grunt build', destino 'dist'
+
+Deploy con Nodechef:
+1. Instalar cliente Nodechef: descargar tar.gz y descomprimir en root
+2. Agregar carpeta a path de sistema
+3. Iniciar un bash en la carpeta '../TOPAIR_administrador/dist'
+4. Iniciar deployador con 'nodechef.bat', escribir credenciales sesión, las mismas que dashboard nodechef
+5. Deployar con comando 'deploy -i topairadministrador -e env.json'
+6. Verificar en 'https://topairadministrador-2851.nodechef.com/'
+
 # pcmadministrador
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.0.0-rc5.

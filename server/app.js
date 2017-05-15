@@ -6,7 +6,7 @@
 
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-process.env.CLOUD_DIR = process.env.CLOUD_DIR || require('path').join(__dirname, '../app-storage');
+process.env.CLOUD_DIR = process.env.CLOUD_DIR || require('path').join(__dirname, '../public');
 
 var express = require('express');
 var mongoose = require('mongoose');

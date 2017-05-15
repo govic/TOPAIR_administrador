@@ -492,7 +492,7 @@ var Equipo = require('../api/equipo/equipo.model');
 /*User.find({}).removeAsync().then(function() {
   User.createAsync({
     provider: 'local',
-    name: 'Administrador',
+    name: 'Nicolas Gonzalez',
     email: 'admin',
     password: '123456a',
     role: 'admin'

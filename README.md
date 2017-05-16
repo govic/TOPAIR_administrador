@@ -1,5 +1,12 @@
 PCM Administrador y API
 
+Iniciar BD Local
+1. Instalar MongoDB
+2. mkdir ../database
+2. cd ../bin && mongod.exe --dbpath ../database
+
+PCM Administrador y API
+
 Administrador de equipos y actividades Topair.
 
 Antes de hacer deploy en Nodechef:

@@ -19,6 +19,6 @@ module.exports = {
       process.env.MONGOHQ_URL ||
       process.env.OPENSHIFT_MONGODB_DB_URL +
       process.env.OPENSHIFT_APP_NAME ||
-      'mongodb://topairadministrador-2851:Sc2*6J)d$3Ht}*5Fd$3Zt}Fd{9)@db-topairadministrador-2851.nodechef.com:5403/topairadministrador'
+      'mongodb://admin:123456a@ds143211.mlab.com:43211/heroku_972jdrx1'
   }
 };

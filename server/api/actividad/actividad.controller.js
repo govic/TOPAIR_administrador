@@ -11,6 +11,7 @@
 
 var _ = require('lodash');
 var Actividad = require('./actividad.model');
+var Equipo = require('../equipo/equipo.model');
 var path = require('path');
 var fs = require('bluebird').promisifyAll(require('fs'));
 
@@ -113,6 +114,22 @@ exports.create = function(req, res) {
   //agraga datos creador de actividad
   req.body.creador = req.user._id;
   Actividad.createAsync(req.body)
+    //guarda datos editados equipo
+    .then(function(entity) {
+      if(req.body.equipo && req.body.equipo._id) {
+        var equipo_id = req.body.equipo._id;
+        if (req.body.equipo._id) {
+          delete req.body.equipo._id;
+        }
+        Equipo.findByIdAsync(equipo_id)
+          .then(handleEntityNotFound(res))
+          .then(saveUpdates(req.body.equipo))
+          .then(function() {
+            return entity;
+          });
+      }
+      return entity;
+    })
     //graba foto etapa estado inicial
     .then(function(entity) {
       if (req.body.estado_inicial && req.body.estado_inicial.foto) {

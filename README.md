@@ -1,5 +1,17 @@
 PCM Administrador y API
 
+Deploy en Heroku
+1. rm -rf dist/
+2. grunt build
+3. cd dist/
+4. git init
+5. heroku git:remote -a pcmtopair
+6. grunt buildcontrol:heroku
+7. heroku open
+
+https://github.com/angular-fullstack/generator-angular-fullstack
+https://angular-fullstack.github.io/generators/heroku/
+
 Iniciar BD Local
 1. Instalar MongoDB
 2. mkdir ../database

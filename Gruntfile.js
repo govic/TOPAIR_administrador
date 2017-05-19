@@ -352,8 +352,7 @@ module.exports = function(grunt) {
           src: [
             'package.json',
             'env.json',
-            'server/**/*'/*,*/
-            // 'app-storage/**/*',
+            'server/**/*'
           ]
         }]
       },

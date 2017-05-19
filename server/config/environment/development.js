@@ -18,5 +18,8 @@ module.exports = {
       }
     }
   },
-  seedDB: true
+  seedDB: false,
+  s3: {
+      bucket: 'pcmtopair-produccion'
+  }
 };

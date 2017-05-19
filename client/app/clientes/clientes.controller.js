@@ -137,6 +137,10 @@ angular.module('PCMAdministradorApp').controller('ClientesCtrl', function($scope
       messageCenterService.add('warning', '<strong>Ops!</strong><br /><span>Solo se permiten imágenes de tipo JPG.</span>', { html: true, timeout: config.time_warning });      
       return;
     }
+
+    //todo elimminar
+    console.dir(cliente.editar.logo.base64);
+
     apiServices.clientes.update({ id: cliente._id }, {
       nombre: cliente.editar.nombre,
       correos: cliente.editar.correos,

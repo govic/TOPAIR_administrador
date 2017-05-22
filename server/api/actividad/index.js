@@ -15,7 +15,4 @@ router.get('/proyecto/:id_proyecto', auth.isAuthenticated(), controller.index);
 router.post('/pendientes', auth.isAuthenticated(), controller.pendientes);
 router.post('/motivo_enum', auth.isAuthenticated(), controller.motivo_enum);
 
-router.get('/estado_inicial/imagen/:id', controller.imagenEstadoInicial);
-router.get('/trabajos_realizados/imagen/:id', controller.imagenTrabajosRealizados);
-
 module.exports = router;

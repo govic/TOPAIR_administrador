@@ -623,14 +623,14 @@
             <div class="col-md-4">
               <p><strong>Estado inicial equipo</strong></p>
               <p class="string-multiline">{{actividad.estado_inicial.texto}}</p>
-              <img delete-on-error-src class="img-responsive" src="/api/actividad/estado_inicial/imagen/{{actividad._id}}">
+              <img delete-on-error-src class="img-responsive" url-s3="estado_inicial_{{actividad._id}}">
               <p><small>Fecha ingreso: {{actividad.estado_inicial.fecha_ingreso | date:'dd/MM/yyyy HH:mm'}}</small></p>
             </div>
             <div class="col-md-4">
               <p><strong>Trabajos realizados</strong></p>
               <p class="string-multiline">{{actividad.trabajos_realizados.texto}}</p>
               <p ng-show="actividad.trabajos_realizados.trabajos && actividad.trabajos_realizados.trabajos.length > 0"><small><strong><!-- <span class="glyphicon glyphicon-wrench"></span>  -->Se realizaron {{actividad.trabajos_realizados.trabajos.length}} trabajos para equipo tipo {{actividad.equipo.tipo ? actividad.equipo.tipo.nombre : 'Sin asignar'}}:</strong> <span class="underline-hover" ng-repeat="trabajo in actividad.trabajos_realizados.trabajos | orderBy: 'nombre'"><strong>({{$index + 1}})</strong> {{trabajo.nombre + ($last ? '.':', ')}}</span></span></small></p>
-              <img delete-on-error-src class="img-responsive" src="/api/actividad/trabajos_realizados/imagen/{{actividad._id}}">
+              <img delete-on-error-src class="img-responsive" url-s3="trabajos_realizados_{{actividad._id}}">
               <p><small>Fecha ingreso: {{actividad.trabajos_realizados.fecha_ingreso | date:'dd/MM/yyyy HH:mm'}}</small></p>
             </div>
             <div class="col-md-4">

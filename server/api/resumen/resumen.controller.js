@@ -104,7 +104,7 @@ exports.create = function(req, res) {
         html: '<h2>' + entity.asunto + '</h2>' +
           '<p>' + entity.cuerpo.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</p>' +
           '<p><a href=\"' + req.get('host').toString() + '/resumen/' + entity._id.toString() + '\">' + parametros.correo.link_text + '</a></p><br>' +
-          '<img style="max-height: 200px;" src=\"' + req.get('host').toString() + '/api/parametro/footer_correo\">'
+          '<img style="max-height: 200px;" src="https://s3-sa-east-1.amazonaws.com/pcmtopair-produccion/footer_correo.jpg">'
       }).then(function(info) {
         req.body.info = info;
         return entity;

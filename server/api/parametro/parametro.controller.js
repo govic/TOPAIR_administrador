@@ -13,6 +13,7 @@ var _ = require('lodash');
 var Parametro = require('./parametro.model');
 var path = require('path');
 var fs = require('bluebird').promisifyAll(require('fs'));
+var s3 = require('../../s3/s3.service');
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -66,8 +67,7 @@ exports.editar = function(req, res) {
     Parametro.createAsync(req.body)
       .then(function(entity) {
         if (req.body.correo.footer) {
-          return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'footer_correo.jpg'), req.body.correo.footer, 'base64').then(function(err) {
-            if (err) { console.error(err); }
+          return s3.uploadImage('footer_correo.jpg', req.body.correo.footer).then(function() {
             return entity;
           });
         }

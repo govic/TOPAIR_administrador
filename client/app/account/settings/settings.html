@@ -67,7 +67,7 @@
               <label>Imagen pié de correo</label>
               <input type="file" class="form-control" placeholder="Imagen pié de correo" ng-model="model.parametros.correo.footer" base-sixty-four-input>
               <p class="help-block">Debe seleccionar una imagen de tamaño menor a 2MB y tipo JPG.</p>
-              <img class="img-responsive img-set-footer-correo" on-error-src="/assets/images/no-image.png" ng-src="/api/parametro/footer_correo" ng-if="!model.editando">
+              <img class="img-responsive img-set-footer-correo" on-error-src="/assets/images/no-image.png" url-s3="footer_correo" ng-if="!model.editando">
             </div>
             <button class="btn btn-success" type="submit">Modificar parámetros</button>
           </form>

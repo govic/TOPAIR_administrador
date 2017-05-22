@@ -83,14 +83,14 @@ angular.module('PCMAdministradorApp', [
   };
 })
 
-//filtro para convertir string con saltos de linea en html con <br>
-/*.filter('lineJump', function() {
-  return function(input) {
-    if (input) {
-      return input.replace(/(?:\r\n|\r|\n)/g, '<br />');
+//directiva que genera correcta url s3
+.directive('urlS3', function() {
+  return {
+    link: function(scope, element, attrs) {
+      attrs.$set('src', 'https://s3-sa-east-1.amazonaws.com/pcmtopair-produccion/' + attrs.urlS3 + '.jpg');
     }
   };
-})*/
+})
 
 .run(function($rootScope, $state, Auth) {
   // Redirect to login if route requires auth and the user is not logged in
@@ -120,7 +120,7 @@ angular.module('PCMAdministradorApp', [
   direccion_empresa: 'Av. Presidente Frei Montalva 6001,  edificio  63. Complejo Industrial El Cortijo. Santiago.',
   telefono_empresa: '+562-2624 3371',
   glosa_aplicacion: 'PCM v1.0.0',
-  url_aplicacion: '#'
+  url_aplicacion: '#',
 
   //texto frazoger
   // glosa_empresa: 'Frazoger',
@@ -130,4 +130,8 @@ angular.module('PCMAdministradorApp', [
   // telefono_empresa: '+56 2 2623 7339',
   // glosa_aplicacion: 'PCM v1.0.2',
   // url_aplicacion: '#'
+
+  url_image: function(id, prefix) {
+    return 'https://s3-sa-east-1.amazonaws.com/pcmtopair-produccion/' + prefix + id + '.jpg';
+  }
 });

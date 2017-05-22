@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <img class="pull-left imagen-cliente-actividades" delete-on-error-src ng-src="/api/cliente/logo/{{model.proyecto.cliente._id}}">
+      <img class="pull-left imagen-cliente-actividades" delete-on-error-src url-s3="logo_cliente_{{model.proyecto.cliente._id}}">
       <h2 class="azul-destacado"><span class="label label-danger" ng-show="!model.proyecto.es_activo">Contrato inactivo</span> {{model.proyecto.cliente && model.proyecto.cliente.nombre? model.proyecto.cliente.nombre : 'Sin cliente asociado.'}} - {{model.proyecto.nombre}}</h2>
     </div>
   </div>

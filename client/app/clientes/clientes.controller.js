@@ -138,9 +138,6 @@ angular.module('PCMAdministradorApp').controller('ClientesCtrl', function($scope
       return;
     }
 
-    //todo elimminar
-    console.dir(cliente.editar.logo.base64);
-
     apiServices.clientes.update({ id: cliente._id }, {
       nombre: cliente.editar.nombre,
       correos: cliente.editar.correos,

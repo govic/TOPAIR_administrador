@@ -13,10 +13,12 @@ var _ = require('lodash');
 var Cliente = require('./cliente.model');
 var path = require('path');
 var fs = require('bluebird').promisifyAll(require('fs'));
+var s3 = require('../../s3/s3.service');
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.dir(err);
     res.status(statusCode).send(err);
   };
 }
@@ -93,10 +95,9 @@ exports.show = function(req, res) {
 // Creates a new Cliente in the DB
 exports.create = function(req, res) {
   Cliente.createAsync(req.body)
-    .then(function(entity){
+    .then(function(entity) {
       if (req.body.logo) {
-        return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'logo_cliente_' + entity._id + '.jpg'), req.body.logo, 'base64').then(function(err) {
-          if (err) { console.error(err); }
+        return s3.uploadImage('logo_cliente_' + entity._id + '.jpg', req.body.logo).then(function() {
           return entity;
         });
       }
@@ -114,10 +115,9 @@ exports.update = function(req, res) {
   Cliente.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
-    .then(function(entity){
+    .then(function(entity) {
       if (req.body.logo) {
-        return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'logo_cliente_' + entity._id + '.jpg'), req.body.logo, 'base64').then(function(err) {
-          if (err) { console.error(err); }
+        return s3.uploadImage('logo_cliente_' + entity._id + '.jpg', req.body.logo).then(function() {
           return entity;
         });
       }
@@ -133,9 +133,4 @@ exports.destroy = function(req, res) {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
-};
-
-//metodo para obtener logo cliente
-exports.logo = function(req, res) {
-  res.sendFile(path.join(process.env.CLOUD_DIR, 'logo_cliente_' + req.params.id + '.jpg'));
 };

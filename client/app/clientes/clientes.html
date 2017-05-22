@@ -60,7 +60,7 @@
         <li class="list-group-item {{!cliente.es_activo ? 'list-group-item-danger' : ''}}" ng-repeat="cliente in model.clientes | orderBy: 'nombre' | orderBy: '-es_activo'" ng-show="model.ver_activos">
           <div class="row" ng-hide="cliente.ver_editar">
             <div class="col-md-2">
-              <img class="img-responsive center-block" on-error-src="/assets/images/no-image.png" ng-src="/api/cliente/logo/{{cliente._id}}" ng-if="!cliente.ver_editar">
+              <img class="img-responsive center-block" on-error-src="/assets/images/no-image.png" url-s3="logo_cliente_{{cliente._id}}" ng-if="!cliente.ver_editar">
             </div>
             <div class="col-md-10">
               <strong>{{cliente.nombre}}</strong>

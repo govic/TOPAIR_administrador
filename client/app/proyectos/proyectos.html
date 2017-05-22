@@ -126,7 +126,7 @@
           <div class="row">
             <div class="col-md-12" ng-hide="proyecto.ver_editar">
               <a ui-sref="actividades({id_proyecto: proyecto._id})" title="Ver trabajos">
-                <img class="pull-left imagen-cliente-actividades" delete-on-error-src ng-src="/api/cliente/logo/{{proyecto.cliente._id}}">
+                <img class="pull-left imagen-cliente-actividades" delete-on-error-src url-s3="logo_cliente_{{proyecto.cliente._id}}">
                 <span ng-show="!proyecto.es_activo" class="label label-danger">Contrato inactivo</span>
                 <h3>{{proyecto.cliente && proyecto.cliente.nombre? proyecto.cliente.nombre : 'Sin cliente asociado.'}} - {{proyecto.nombre}}</h3>
               </a>

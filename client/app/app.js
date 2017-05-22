@@ -84,13 +84,13 @@ angular.module('PCMAdministradorApp', [
 })
 
 //directiva que genera correcta url s3
-.directive('urlS3', function() {
+.directive('urlS3', ['config', function(config) {
   return {
     link: function(scope, element, attrs) {
-      attrs.$set('src', 'https://s3-sa-east-1.amazonaws.com/pcmtopair-produccion/' + attrs.urlS3 + '.jpg');
+      attrs.$set('src', config.url_image_base + attrs.urlS3 + '.jpg');
     }
   };
-})
+}])
 
 .run(function($rootScope, $state, Auth) {
   // Redirect to login if route requires auth and the user is not logged in
@@ -131,7 +131,5 @@ angular.module('PCMAdministradorApp', [
   // glosa_aplicacion: 'PCM v1.0.2',
   // url_aplicacion: '#'
 
-  url_image: function(id, prefix) {
-    return 'https://s3-sa-east-1.amazonaws.com/pcmtopair-produccion/' + prefix + id + '.jpg';
-  }
+  url_image_base: 'https://s3-sa-east-1.amazonaws.com/pcmtopair-produccion/'
 });

@@ -12,6 +12,9 @@ Deploy en Heroku
 https://github.com/angular-fullstack/generator-angular-fullstack
 https://angular-fullstack.github.io/generators/heroku/
 
+Configuración credenciales s3 en heroku:
+heroku config:set AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy
+
 Iniciar BD Local
 1. Instalar MongoDB
 2. mkdir ../database

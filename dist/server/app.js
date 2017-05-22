@@ -19,7 +19,7 @@ mongoose.connection.on('error', function(err) {
   console.error('MongoDB connection error: ' + err);
   process.exit(-1);
 });
-mongoose.set('debug', true);
+mongoose.set('debug', process.env.NODE_ENV === 'development');
 
 // Populate databases with sample data
 if (config.seedDB) { require('./config/seed'); }

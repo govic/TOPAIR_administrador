@@ -14,6 +14,5 @@ router.patch('/:id', auth.hasRole('admin'), controller.update);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
 router.post('/activos', auth.hasRole('admin'), controller.activos);
-router.get('/logo/:id', controller.logo);
 
 module.exports = router;

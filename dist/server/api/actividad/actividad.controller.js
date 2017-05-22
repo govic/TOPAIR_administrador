@@ -14,6 +14,7 @@ var Actividad = require('./actividad.model');
 var Equipo = require('../equipo/equipo.model');
 var path = require('path');
 var fs = require('bluebird').promisifyAll(require('fs'));
+var s3 = require('../../s3/s3.service');
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -133,8 +134,7 @@ exports.create = function(req, res) {
     //graba foto etapa estado inicial
     .then(function(entity) {
       if (req.body.estado_inicial && req.body.estado_inicial.foto) {
-        return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'estado_inicial_' + entity._id + '.jpg'), req.body.estado_inicial.foto, 'base64').then(function(err) {
-          if (err) { console.error(err); }
+        return s3.uploadImage('estado_inicial_' + entity._id + '.jpg', req.body.estado_inicial.foto).then(function() {
           return entity;
         });
       }
@@ -143,8 +143,7 @@ exports.create = function(req, res) {
     //graba foto etapa trabajos realizados
     .then(function(entity) {
       if (req.body.trabajos_realizados && req.body.trabajos_realizados.foto) {
-        return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'trabajos_realizados_' + entity._id + '.jpg'), req.body.trabajos_realizados.foto, 'base64').then(function(err) {
-          if (err) { console.error(err); }
+        return s3.uploadImage('trabajos_realizados_' + entity._id + '.jpg', req.body.trabajos_realizados.foto).then(function() {
           return entity;
         });
       }
@@ -172,9 +171,8 @@ exports.update = function(req, res) {
     .then(saveUpdates(req.body))
     //graba foto etapa estado inicial
     .then(function(entity) {
-      if (req.body.estado_inicial && req.body.estado_inicial.foto) {        
-        return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'estado_inicial_' + entity._id + '.jpg'), req.body.estado_inicial.foto, 'base64').then(function(err) {
-          if (err) { console.error(err); }
+      if (req.body.estado_inicial && req.body.estado_inicial.foto) {
+        return s3.uploadImage('estado_inicial_' + entity._id + '.jpg', req.body.estado_inicial.foto).then(function() {
           return entity;
         });
       }
@@ -183,8 +181,7 @@ exports.update = function(req, res) {
     //graba foto etapa trabajos realizados
     .then(function(entity) {
       if (req.body.trabajos_realizados && req.body.trabajos_realizados.foto) {
-        return fs.writeFileAsync(path.join(process.env.CLOUD_DIR, 'trabajos_realizados_' + entity._id + '.jpg'), req.body.trabajos_realizados.foto, 'base64').then(function(err) {
-          if (err) { console.error(err); }
+        return s3.uploadImage('trabajos_realizados_' + entity._id + '.jpg', req.body.trabajos_realizados.foto).then(function() {
           return entity;
         });
       }
@@ -211,14 +208,4 @@ exports.destroy = function(req, res) {
 //metodo para obtener valores del enumerado motivo visita
 exports.motivo_enum = function(req, res) {
   return res.status(200).json(Actividad.schema.path('motivo_visita').enumValues);
-};
-
-//metodo para obtener imagen estado inicial desde app storage
-exports.imagenEstadoInicial = function(req, res) {
-  res.sendFile(path.join(process.env.CLOUD_DIR, 'estado_inicial_' + req.params.id + '.jpg'));
-};
-
-//metodo para obtener imagen trabajos realizados desde app storage
-exports.imagenTrabajosRealizados = function(req, res) {
-  res.sendFile(path.join(process.env.CLOUD_DIR, 'trabajos_realizados_' + req.params.id + '.jpg'));
 };
